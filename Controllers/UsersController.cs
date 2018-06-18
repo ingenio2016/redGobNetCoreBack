@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AngularASPNETCore2WebApiAuth.Data;
 using AngularASPNETCore2WebApiAuth.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AngularASPNETCore2WebApiAuth.Controllers
 {
   [Route("api/[controller]")]
+  [EnableCors("CorsPolicy")]
   [Authorize]
   public class UsersController : Controller
   {

@@ -13,9 +13,9 @@ namespace AngularASPNETCore2WebApiAuth.ViewModels
 
     public string LastName { get; set; }
 
-    public int Document { get; set; }
+    public string Document { get; set; }
 
-    public DateTime DateOfBirth { get; set; }
+    public Nullable<DateTime> DateOfBirth { get; set; }
 
     public int CountryId { get; set; }
 
@@ -35,7 +35,7 @@ namespace AngularASPNETCore2WebApiAuth.ViewModels
 
     public string Longitude { get; set; }
 
-    public int CellPhone { get; set; }
+    public string CellPhone { get; set; }
 
     public string Email { get; set; }
 

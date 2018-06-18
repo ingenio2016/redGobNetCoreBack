@@ -8,6 +8,7 @@ using AngularASPNETCore2WebApiAuth.Models.Entities;
 using AngularASPNETCore2WebApiAuth.ViewModels;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AngularASPNETCore2WebApiAuth.Controllers
 {
   [Route("api/[controller]")]
+  [EnableCors("CorsPolicy")]
   [Authorize]
   public class CoordinatorsController : Controller
   {

@@ -102,8 +102,8 @@ namespace AngularASPNETCore2WebApiAuth
       // add identity
       var builder = services.AddIdentityCore<AppUser>(o =>
       {
-              // configure identity options
-              o.Password.RequireDigit = false;
+       // configure identity options
+        o.Password.RequireDigit = false;
         o.Password.RequireLowercase = false;
         o.Password.RequireUppercase = false;
         o.Password.RequireNonAlphanumeric = false;

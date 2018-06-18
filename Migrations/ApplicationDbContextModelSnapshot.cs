@@ -89,7 +89,8 @@ namespace AngularASPNETCore2WebApiAuth.Migrations
 
                     b.Property<string>("Association");
 
-                    b.Property<int>("CellPhone");
+                    b.Property<string>("CellPhone")
+                        .IsRequired();
 
                     b.Property<int>("CityId");
 
@@ -97,11 +98,12 @@ namespace AngularASPNETCore2WebApiAuth.Migrations
 
                     b.Property<int>("CountryId");
 
-                    b.Property<DateTime>("DateOfBirth");
+                    b.Property<DateTime?>("DateOfBirth");
 
                     b.Property<int>("DepartmentId");
 
-                    b.Property<int>("Document");
+                    b.Property<string>("Document")
+                        .IsRequired();
 
                     b.Property<string>("Email")
                         .IsRequired();
@@ -204,7 +206,8 @@ namespace AngularASPNETCore2WebApiAuth.Migrations
 
                     b.Property<string>("Association");
 
-                    b.Property<int>("CellPhone");
+                    b.Property<string>("CellPhone")
+                        .IsRequired();
 
                     b.Property<int>("CityId");
 
@@ -212,11 +215,12 @@ namespace AngularASPNETCore2WebApiAuth.Migrations
 
                     b.Property<int>("CountryId");
 
-                    b.Property<DateTime>("DateOfBirth");
+                    b.Property<DateTime?>("DateOfBirth");
 
                     b.Property<int>("DepartmentId");
 
-                    b.Property<int>("Document");
+                    b.Property<string>("Document")
+                        .IsRequired();
 
                     b.Property<string>("Email")
                         .IsRequired();
@@ -315,7 +319,8 @@ namespace AngularASPNETCore2WebApiAuth.Migrations
 
                     b.Property<string>("Association");
 
-                    b.Property<int>("CellPhone");
+                    b.Property<string>("CellPhone")
+                        .IsRequired();
 
                     b.Property<int>("CityId");
 
@@ -323,11 +328,12 @@ namespace AngularASPNETCore2WebApiAuth.Migrations
 
                     b.Property<int>("CountryId");
 
-                    b.Property<DateTime>("DateOfBirth");
+                    b.Property<DateTime?>("DateOfBirth");
 
                     b.Property<int>("DepartmentId");
 
-                    b.Property<int>("Document");
+                    b.Property<string>("Document")
+                        .IsRequired();
 
                     b.Property<string>("Email")
                         .IsRequired();
@@ -382,7 +388,8 @@ namespace AngularASPNETCore2WebApiAuth.Migrations
 
                     b.Property<string>("Association");
 
-                    b.Property<int>("CellPhone");
+                    b.Property<string>("CellPhone")
+                        .IsRequired();
 
                     b.Property<int>("CityId");
 
@@ -390,11 +397,12 @@ namespace AngularASPNETCore2WebApiAuth.Migrations
 
                     b.Property<int>("CountryId");
 
-                    b.Property<DateTime>("DateOfBirth");
+                    b.Property<DateTime?>("DateOfBirth");
 
                     b.Property<int>("DepartmentId");
 
-                    b.Property<int>("Document");
+                    b.Property<string>("Document")
+                        .IsRequired();
 
                     b.Property<string>("Email")
                         .IsRequired();
@@ -523,7 +531,8 @@ namespace AngularASPNETCore2WebApiAuth.Migrations
 
                     b.Property<string>("Association");
 
-                    b.Property<int>("CellPhone");
+                    b.Property<string>("CellPhone")
+                        .IsRequired();
 
                     b.Property<int>("CityId");
 
@@ -531,11 +540,12 @@ namespace AngularASPNETCore2WebApiAuth.Migrations
 
                     b.Property<int>("CountryId");
 
-                    b.Property<DateTime>("DateOfBirth");
+                    b.Property<DateTime?>("DateOfBirth");
 
                     b.Property<int>("DepartmentId");
 
-                    b.Property<int>("Document");
+                    b.Property<string>("Document")
+                        .IsRequired();
 
                     b.Property<string>("Email")
                         .IsRequired();

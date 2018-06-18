@@ -36,7 +36,14 @@ namespace AngularASPNETCore2WebApiAuth.Controllers
         return BadRequest(ModelState);
       }
 
-      var userIdentity = _mapper.Map<AppUser>(model);
+      var userIdentity = new AppUser
+      {
+        Email = model.Email,
+        EmailConfirmed = true,
+        FirstName = model.FirstName,
+        LastName = model.LastName,
+        UserName = model.Email
+      };
 
       var result = await _userManager.CreateAsync(userIdentity, model.Password);
 

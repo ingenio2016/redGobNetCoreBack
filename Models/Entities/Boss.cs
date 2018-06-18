@@ -17,9 +17,9 @@ namespace AngularASPNETCore2WebApiAuth.Models.Entities
     public string LastName { get; set; }
 
     [Required(ErrorMessage = "El campo {0} es requerido")]
-    public int Document { get; set; }
+    public string Document { get; set; }
 
-    public DateTime DateOfBirth { get; set; }
+    public Nullable<DateTime> DateOfBirth { get; set; }
 
     [Required(ErrorMessage = "El campo {0} es requerido")]
     public int CountryId { get; set; }
@@ -40,7 +40,7 @@ namespace AngularASPNETCore2WebApiAuth.Models.Entities
     public string Longitude { get; set; }
 
     [Required(ErrorMessage = "El campo {0} es requerido")]
-    public int CellPhone { get; set; }
+    public string CellPhone { get; set; }
 
     [Required(ErrorMessage = "El campo {0} es requerido")]
     public string Email { get; set; }
