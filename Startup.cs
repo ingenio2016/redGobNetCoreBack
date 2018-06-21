@@ -42,9 +42,24 @@ namespace AngularASPNETCore2WebApiAuth
     public void ConfigureServices(IServiceCollection services)
     {
       // Add framework services.
-      services.AddDbContext<ApplicationDbContext>(options =>
-          options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-              b => b.MigrationsAssembly("AngularASPNETCore2WebApiAuth")));
+      //services.AddDbContext<ApplicationDbContext>(options =>
+      //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+      //        b => b.MigrationsAssembly("AngularASPNETCore2WebApiAuth")));
+
+      //Este codigo es de azure
+      if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+        services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection")));
+      else
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly("AngularASPNETCore2WebApiAuth")));
+
+      // Automatically perform database migration
+      services.BuildServiceProvider().GetService<ApplicationDbContext>().Database.Migrate();
+
+
+
 
       services.AddSingleton<IJwtFactory, JwtFactory>();
 
