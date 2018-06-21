@@ -56,6 +56,9 @@ namespace AngularASPNETCore2WebApiAuth.Models.Entities
     [Display(Name = "Nombre Completo")]
     public string FullName { get { return string.Format("{0} {1}", FirstName, LastName); } }
 
+    [Display(Name = "Rol")]
+    public string RoleUser { get; set; }
+
     [Required(ErrorMessage = "El campo {0} es requerido")]
     [DataType(DataType.EmailAddress)]
     [MaxLength(250, ErrorMessage = "El campo {0} debe tener mínimo {1} caracteres")]

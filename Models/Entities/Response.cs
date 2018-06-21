@@ -11,5 +11,6 @@ namespace AngularASPNETCore2WebApiAuth.Models.Entities
     public bool Success { get; set; }
     public HttpStatusCode Result { get; set; }
     public object Data { get; set; }
+    public string Message { get; set; }
   }
 }

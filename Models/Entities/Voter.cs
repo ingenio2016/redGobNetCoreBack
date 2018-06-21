@@ -32,6 +32,9 @@ namespace AngularASPNETCore2WebApiAuth.Models.Entities
     public int CityId { get; set; }
 
     [Required(ErrorMessage = "El campo {0} es requerido")]
+    public int GenreId { get; set; }
+
+    [Required(ErrorMessage = "El campo {0} es requerido")]
     public string Address { get; set; }
 
     [Required(ErrorMessage = "El campo {0} es requerido")]
@@ -70,5 +73,7 @@ namespace AngularASPNETCore2WebApiAuth.Models.Entities
     public Commune Commune { get; set; }
     public VotingPlace VotingPlace { get; set; }
     public User User { get; set; }
+    public Genre Genre { get; set; }
+
   }
 }

@@ -36,7 +36,6 @@ namespace AngularASPNETCore2WebApiAuth.Controllers
         user.Department = _context.Departments.Find(user.DepartmentId);
         user.City = _context.Cities.Find(user.CityId);
         user.Genre = _context.Genres.Find(user.GenreId);
-        var UserRole = _context.UserInRoles.Where(u => u.UserId == user.UserId).FirstOrDefault();
         var data = new UserView
         {
           Id = user.UserId,
@@ -53,13 +52,9 @@ namespace AngularASPNETCore2WebApiAuth.Controllers
           GenreName = user.Genre.Name,
           Phone = user.Phone,
           FullName = user.FullName,
-          UserEmail = user.UserName          
+          UserEmail = user.UserName,
+          Role = user.RoleUser
         };
-
-        if(UserRole != null)
-        {
-          data.Role = UserRole.RoleName;
-        }
 
         userList.Add(data);
       }
@@ -80,7 +75,6 @@ namespace AngularASPNETCore2WebApiAuth.Controllers
       user.Department = _context.Departments.Find(user.DepartmentId);
       user.City = _context.Cities.Find(user.CityId);
       user.Genre = _context.Genres.Find(user.GenreId);
-      var UserRole = _context.UserInRoles.Where(u => u.UserId == user.UserId).FirstOrDefault();
       var userView = new UserView
       {
         Id = user.UserId,
@@ -97,13 +91,9 @@ namespace AngularASPNETCore2WebApiAuth.Controllers
         GenreName = user.Genre.Name,
         Phone = user.Phone,
         FullName = user.FullName,
-        UserEmail = user.UserName
+        UserEmail = user.UserName,
+        Role = user.RoleUser
       };
-
-      if(UserRole != null)
-      {
-        userView.Role = UserRole.RoleName;
-      }
 
       return Ok(userView);
     }

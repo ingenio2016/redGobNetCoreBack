@@ -25,7 +25,5 @@ namespace AngularASPNETCore2WebApiAuth.Data
     public DbSet<Coordinator> Coordinators { get; set; }
     public DbSet<Leader> Leaders { get; set; }
     public DbSet<Voter> Voters { get; set; }
-    public DbSet<UserInRole> UserInRoles { get; set; }
-
   }
 }

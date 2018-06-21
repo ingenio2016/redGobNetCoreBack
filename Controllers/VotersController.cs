@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AngularASPNETCore2WebApiAuth.Data;
 using AngularASPNETCore2WebApiAuth.Helpers;
@@ -24,63 +25,103 @@ namespace AngularASPNETCore2WebApiAuth.Controllers
     private readonly ApplicationDbContext _context;
     private readonly UserManager<AppUser> _userManager;
     private readonly IMapper _mapper;
-    public VotersController(ApplicationDbContext context)
+    public VotersController(UserManager<AppUser> userManager, IMapper mapper, ApplicationDbContext appDbContext)
     {
-      _context = context;
+      _userManager = userManager;
+      _mapper = mapper;
+      _context = appDbContext;
     }
 
     [HttpGet]
-    public List<VoterViewModel> GetAll()
+    public Response GetAll()
     {
+      var response = new Response
+      {
+        Success = false,
+        Result = HttpStatusCode.NotFound,
+        Message = "No se encontró información",
+        Data = { }
+
+      };
       List<VoterViewModel> voterList = new List<VoterViewModel>();
       var voters = _context.Voters.ToList();
 
-      foreach (var voter in voters)
+      if (voters.Count > 0)
       {
-        var data = new VoterViewModel
+        foreach (var voter in voters)
         {
-          Id = voter.VoterId,
-          FirstName = voter.FirstName,
-          LastName = voter.LastName,
-          Document = voter.Document,
-          Address = voter.Address,
-          CountryId = voter.Country.CountryId,
-          CountryName = voter.Country.Name,
-          DepartmentId = voter.Department.DepartmentId,
-          DepartmentName = voter.Department.Name,
-          CityId = voter.City.CityId,
-          CityName = voter.City.Name,
-          CellPhone = voter.CellPhone,
-          Association = voter.Association,
-          CommuneId = voter.Commune.CommuneId,
-          Commune = voter.Commune.Name,
-          DateOfBirth = voter.DateOfBirth,
-          Email = voter.Email,
-          Latitude = voter.Latitude,
-          Longitude = voter.Longitude,
-          Ocupation = voter.Ocupation,
-          UserId = voter.User.UserId,
-          UserName = voter.User.FirstName + " " + voter.User.LastName,
-          VotingPlaceId = voter.VotingPlace.VotingPlaceId,
-          VotingPlace = voter.VotingPlace.Name,
-          WorkPlace = voter.WorkPlace,
-          Observation = voter.Observation
-        };
-        voterList.Add(data);
-      }
+          voter.Country = _context.Countries.Find(voter.CountryId);
+          voter.Department = _context.Departments.Find(voter.DepartmentId);
+          voter.City = _context.Cities.Find(voter.CityId);
+          voter.Commune = _context.Communes.Find(voter.CommuneId);
+          voter.User = _context.DataUsers.Find(voter.UserId);
+          voter.VotingPlace = _context.VotingPlaces.Find(voter.VotingPlaceId);
+          voter.Genre = _context.Genres.Find(voter.GenreId);
+          var data = new VoterViewModel
+          {
+            Id = voter.VoterId,
+            FirstName = voter.FirstName,
+            LastName = voter.LastName,
+            Document = voter.Document,
+            Address = voter.Address,
+            CountryId = voter.Country.CountryId,
+            CountryName = voter.Country.Name,
+            DepartmentId = voter.Department.DepartmentId,
+            DepartmentName = voter.Department.Name,
+            CityId = voter.City.CityId,
+            CityName = voter.City.Name,
+            GenreId = voter.Genre.GenreId,
+            GenreName = voter.Genre.Name,
+            CellPhone = voter.CellPhone,
+            Association = voter.Association,
+            CommuneId = voter.Commune.CommuneId,
+            Commune = voter.Commune.Name,
+            DateOfBirth = voter.DateOfBirth,
+            Email = voter.Email,
+            Latitude = voter.Latitude,
+            Longitude = voter.Longitude,
+            Ocupation = voter.Ocupation,
+            UserId = voter.User.UserId,
+            UserName = voter.User.FirstName + " " + voter.User.LastName,
+            VotingPlaceId = voter.VotingPlace.VotingPlaceId,
+            VotingPlace = voter.VotingPlace.Name,
+            WorkPlace = voter.WorkPlace,
+            Observation = voter.Observation
+          };
+          voterList.Add(data);
+        }
 
-      return voterList;
+        response.Success = true;
+        response.Result = HttpStatusCode.OK;
+        response.Message = "La consulta se realizó exitosamente";
+        response.Data = voterList;
+      }
+      return response;
     }
 
     [HttpGet("{id}", Name = "GetVoter")]
-    public IActionResult GetById(int id)
+    public Response GetById(int id)
     {
+      var response = new Response
+      {
+        Success = false,
+        Result = HttpStatusCode.NotFound,
+        Message = "No se encontró información",
+        Data = { }
+
+      };
       var voter = _context.Voters.Find(id);
       if (voter == null)
       {
-        return NotFound();
+        return response;
       }
-
+      voter.Country = _context.Countries.Find(voter.CountryId);
+      voter.Department = _context.Departments.Find(voter.DepartmentId);
+      voter.City = _context.Cities.Find(voter.CityId);
+      voter.Commune = _context.Communes.Find(voter.CommuneId);
+      voter.User = _context.DataUsers.Find(voter.UserId);
+      voter.VotingPlace = _context.VotingPlaces.Find(voter.VotingPlaceId);
+      voter.Genre = _context.Genres.Find(voter.GenreId);
       var voterView = new VoterViewModel
       {
         Id = voter.VoterId,
@@ -94,6 +135,8 @@ namespace AngularASPNETCore2WebApiAuth.Controllers
         DepartmentName = voter.Department.Name,
         CityId = voter.City.CityId,
         CityName = voter.City.Name,
+        GenreId = voter.Genre.GenreId,
+        GenreName = voter.Genre.Name,
         CellPhone = voter.CellPhone,
         Association = voter.Association,
         CommuneId = voter.Commune.CommuneId,
@@ -111,53 +154,85 @@ namespace AngularASPNETCore2WebApiAuth.Controllers
         Observation = voter.Observation
       };
 
-      return Ok(voterView);
+      response.Success = true;
+      response.Result = HttpStatusCode.OK;
+      response.Message = "La consulta se realizó exitosamente";
+      response.Data = voterView;
+
+      return response;
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] Voter voter)
+    public async Task<Response> CreateAsync([FromBody] Voter voter)
     {
       if (voter == null)
       {
-        return BadRequest();
+        return new Response { Success = false, Result = HttpStatusCode.NotFound, Message = "No se envió información", Data = { } };
       }
 
-      //Create User
-      var registrationModel = new UserViewModel
-      {
-        Address = voter.Address,
-        CityId = voter.CityId,
-        CountryId = voter.CountryId,
-        DepartmentId = voter.DepartmentId,
-        Email = voter.Email,
-        EmailConfirmed = true,
-        FirstName = voter.FirstName,
-        LastName = voter.LastName,
-        Password = voter.Email,
-        Phone = voter.CellPhone.ToString(),
-        PhoneNumber = voter.CellPhone.ToString(),
-        UserEmail = voter.Email,
-        UserName = voter.Email
-      };
-
       _context.Voters.Add(voter);
-      _context.SaveChanges();
+      try
+      {
+        _context.SaveChanges();
+        voter.Country = _context.Countries.Find(voter.CountryId);
+        voter.Department = _context.Departments.Find(voter.DepartmentId);
+        voter.City = _context.Cities.Find(voter.CityId);
+        voter.Commune = _context.Communes.Find(voter.CommuneId);
+        voter.User = _context.DataUsers.Find(voter.UserId);
+        voter.VotingPlace = _context.VotingPlaces.Find(voter.VotingPlaceId);
+        voter.Genre = _context.Genres.Find(voter.GenreId);
+        var voterView = new VoterViewModel
+        {
+          Id = voter.VoterId,
+          FirstName = voter.FirstName,
+          LastName = voter.LastName,
+          Document = voter.Document,
+          Address = voter.Address,
+          CountryId = voter.Country.CountryId,
+          CountryName = voter.Country.Name,
+          DepartmentId = voter.Department.DepartmentId,
+          DepartmentName = voter.Department.Name,
+          CityId = voter.City.CityId,
+          CityName = voter.City.Name,
+          GenreId = voter.Genre.GenreId,
+          GenreName = voter.Genre.Name,
+          CellPhone = voter.CellPhone,
+          Association = voter.Association,
+          CommuneId = voter.Commune.CommuneId,
+          Commune = voter.Commune.Name,
+          DateOfBirth = voter.DateOfBirth,
+          Email = voter.Email,
+          Latitude = voter.Latitude,
+          Longitude = voter.Longitude,
+          Ocupation = voter.Ocupation,
+          UserId = voter.User.UserId,
+          UserName = voter.User.FirstName + " " + voter.User.LastName,
+          VotingPlaceId = voter.VotingPlace.VotingPlaceId,
+          VotingPlace = voter.VotingPlace.Name,
+          WorkPlace = voter.WorkPlace,
+          Observation = voter.Observation
+        };
 
-      return CreatedAtRoute("GetVoter", new { id = voter.VoterId }, voter);
+        return new Response { Success = true, Result = HttpStatusCode.OK, Message = "El registro se guardó exitosamente", Data = voterView };
+      }
+      catch (Exception ex)
+      {
+        return new Response { Success = false, Result = HttpStatusCode.InternalServerError, Message = "Ocurrió un error al crear el registro", Data = { } };
+      }
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] Voter voter)
+    public Response Update(int id, [FromBody] Voter voter)
     {
       if (voter == null || voter.VoterId != id)
       {
-        return BadRequest();
+        return new Response { Success = false, Result = HttpStatusCode.NotFound, Message = "No se envió información", Data = { } };
       }
 
       var voterUpdate = _context.Voters.Find(id);
       if (voterUpdate == null)
       {
-        return NotFound();
+        return new Response { Success = false, Result = HttpStatusCode.NotFound, Message = "No se encontró ningún registro", Data = { } };
       }
 
       voterUpdate.FirstName = voter.FirstName;
@@ -167,6 +242,7 @@ namespace AngularASPNETCore2WebApiAuth.Controllers
       voterUpdate.CountryId = voter.CountryId;
       voterUpdate.DepartmentId = voter.DepartmentId;
       voterUpdate.CityId = voter.CityId;
+      voterUpdate.GenreId = voter.GenreId;
       voterUpdate.CellPhone = voter.CellPhone;
       voterUpdate.Association = voter.Association;
       voterUpdate.CommuneId = voter.CommuneId;
@@ -180,23 +256,75 @@ namespace AngularASPNETCore2WebApiAuth.Controllers
       voterUpdate.Observation = voter.Observation;
 
       _context.Voters.Update(voterUpdate);
-      _context.SaveChanges();
+      try
+      {
+        _context.SaveChanges();
+        voterUpdate.Country = _context.Countries.Find(voterUpdate.CountryId);
+        voterUpdate.Department = _context.Departments.Find(voterUpdate.DepartmentId);
+        voterUpdate.City = _context.Cities.Find(voterUpdate.CityId);
+        voterUpdate.Commune = _context.Communes.Find(voterUpdate.CommuneId);
+        voterUpdate.User = _context.DataUsers.Find(voterUpdate.UserId);
+        voterUpdate.VotingPlace = _context.VotingPlaces.Find(voterUpdate.VotingPlaceId);
+        voterUpdate.Genre = _context.Genres.Find(voterUpdate.GenreId);
+        var voterView = new VoterViewModel
+        {
+          Id = voterUpdate.VoterId,
+          FirstName = voterUpdate.FirstName,
+          LastName = voterUpdate.LastName,
+          Document = voterUpdate.Document,
+          Address = voterUpdate.Address,
+          CountryId = voterUpdate.Country.CountryId,
+          CountryName = voterUpdate.Country.Name,
+          DepartmentId = voterUpdate.Department.DepartmentId,
+          DepartmentName = voterUpdate.Department.Name,
+          CityId = voterUpdate.City.CityId,
+          CityName = voterUpdate.City.Name,
+          GenreId = voterUpdate.Genre.GenreId,
+          GenreName = voterUpdate.Genre.Name,
+          CellPhone = voterUpdate.CellPhone,
+          Association = voterUpdate.Association,
+          CommuneId = voterUpdate.Commune.CommuneId,
+          Commune = voterUpdate.Commune.Name,
+          DateOfBirth = voterUpdate.DateOfBirth,
+          Email = voterUpdate.Email,
+          Latitude = voterUpdate.Latitude,
+          Longitude = voterUpdate.Longitude,
+          Ocupation = voterUpdate.Ocupation,
+          UserId = voterUpdate.User.UserId,
+          UserName = voterUpdate.User.FirstName + " " + voterUpdate.User.LastName,
+          VotingPlaceId = voterUpdate.VotingPlace.VotingPlaceId,
+          VotingPlace = voterUpdate.VotingPlace.Name,
+          WorkPlace = voterUpdate.WorkPlace,
+          Observation = voterUpdate.Observation
+        };
 
-      return CreatedAtRoute("GetVoter", new { id = voterUpdate.VoterId }, voterUpdate);
+        return new Response { Success = true, Result = HttpStatusCode.OK, Message = "El registro se modificó exitosamente", Data = voterView };
+      }
+      catch (Exception)
+      {
+        return new Response { Success = false, Result = HttpStatusCode.InternalServerError, Message = "Ocurrió un error al modificar el registro", Data = { } };
+      }
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<Response> DeleteAsync(int id)
     {
       var voter = _context.Voters.Find(id);
       if (voter == null)
       {
-        return NotFound();
+        return new Response { Success = false, Result = HttpStatusCode.NotFound, Message = "No se encontró ningún registro", Data = { } };
       }
 
       _context.Voters.Remove(voter);
-      _context.SaveChanges();
-      return NoContent();
+      try
+      {
+        _context.SaveChanges();
+        return new Response { Success = true, Result = HttpStatusCode.OK, Message = "El registro se borró exitosamente", Data = { } };
+      }
+      catch (Exception)
+      {
+        return new Response { Success = false, Result = HttpStatusCode.InternalServerError, Message = "Ocurrió un error al borrar el registro", Data = { } };
+      }
     }
   }
 }

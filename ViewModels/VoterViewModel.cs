@@ -29,6 +29,10 @@ namespace AngularASPNETCore2WebApiAuth.ViewModels
 
     public string CityName { get; set; }
 
+    public int GenreId { get; set; }
+
+    public string GenreName { get; set; }
+
     public string Address { get; set; }
 
     public string Latitude { get; set; }

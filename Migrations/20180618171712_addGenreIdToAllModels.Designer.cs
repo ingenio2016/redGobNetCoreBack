@@ -11,9 +11,10 @@ using System;
 namespace AngularASPNETCore2WebApiAuth.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180618171712_addGenreIdToAllModels")]
+    partial class addGenreIdToAllModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -506,8 +507,6 @@ namespace AngularASPNETCore2WebApiAuth.Migrations
 
                     b.Property<string>("Photo");
 
-                    b.Property<string>("RoleUser");
-
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(250);
@@ -523,6 +522,20 @@ namespace AngularASPNETCore2WebApiAuth.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("DataUsers");
+                });
+
+            modelBuilder.Entity("AngularASPNETCore2WebApiAuth.Models.Entities.UserInRole", b =>
+                {
+                    b.Property<int>("UserInRoleId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("RoleName");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("UserInRoleId");
+
+                    b.ToTable("UserInRoles");
                 });
 
             modelBuilder.Entity("AngularASPNETCore2WebApiAuth.Models.Entities.Voter", b =>
